@@ -10,10 +10,12 @@
       --bg-1: #f6f8fc;
       --bg-2: #eef3ff;
       --card: rgba(255, 255, 255, 0.92);
+      --card-strong: rgba(255,255,255,0.98);
       --text: #162033;
       --muted: #63708a;
       --line: rgba(22, 32, 51, 0.08);
       --shadow: 0 18px 50px rgba(31, 44, 77, 0.12);
+      --shadow-strong: 0 24px 60px rgba(45, 109, 246, 0.16);
       --primary: #2d6df6;
       --primary-2: #6c8fff;
       --success-bg: #edf8f0;
@@ -32,6 +34,7 @@
 
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       min-height: 100vh;
       min-height: 100dvh;
@@ -176,6 +179,30 @@
     .status-blocked { background: var(--danger-bg); color: var(--danger-text); border-color: rgba(180,35,24,0.1); }
     .status-info { background: var(--info-bg); color: var(--info-text); border-color: rgba(36,86,196,0.08); }
 
+    .quick-cta {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(45,109,246,0.08), rgba(108,143,255,0.14));
+      border: 1px solid rgba(45,109,246,0.12);
+      box-shadow: var(--shadow-strong);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .quick-cta-title {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .quick-cta-text {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
     .open-hours {
       padding: 16px 18px;
       border-radius: var(--radius-lg);
@@ -189,6 +216,13 @@
       font-size: 28px;
       font-weight: 800;
       letter-spacing: -0.03em;
+    }
+
+    .countdown {
+      margin-top: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
     .grid {
@@ -354,7 +388,8 @@
       .section p,
       .section li,
       .status-box p,
-      .cta-copy p {
+      .cta-copy p,
+      .quick-cta-text {
         font-size: 14px;
       }
 
@@ -406,12 +441,22 @@
             <h3>Đang kiểm tra điều kiện truy cập...</h3>
             <p>Vui lòng đợi trong giây lát để hệ thống xác định thiết bị, hướng màn hình và thời gian mở demo.</p>
           </div>
+
+          <div id="quickCta" class="quick-cta">
+            <div class="quick-cta-title" id="quickCtaTitle">Kiểm tra truy cập</div>
+            <div class="quick-cta-text" id="quickCtaText">Khi đủ điều kiện, nút truy cập demo sẽ hiển thị ngay tại đây để người dùng không cần tìm xuống dưới.</div>
+            <a id="quickDemoButton" class="cta-btn hidden" href="https://imsstore.github.io/spotty-demo/" target="_blank" rel="noopener noreferrer">
+              Trải nghiệm demo
+            </a>
+            <div id="quickCtaFallback" class="cta-note">Liên kết demo sẽ hiển thị sau khi hệ thống kiểm tra xong điều kiện truy cập.</div>
+          </div>
         </div>
 
         <div class="open-hours">
           <div class="side-label">Thời gian mở demo</div>
           <span class="time" id="openWindow">07:00 - 21:00</span>
           <div class="cta-note" id="timeZoneNote">Áp dụng theo giờ Việt Nam (GMT+7).</div>
+          <div class="countdown" id="countdownText">Hệ thống đang cập nhật trạng thái thời gian mở.</div>
         </div>
       </aside>
     </section>
@@ -475,12 +520,12 @@
   <script>
     (function () {
       const CONFIG = {
-        openHour: 7,
+        openHour: 9,
         openMinute: 0,
         closeHour: 21,
         closeMinute: 0,
         timeZone: 'Asia/Ho_Chi_Minh',
-        demoUrl: 'https://app.spotfinder.vn/en/chatbot/ims-doanhbMd0Z8TVCnzFNo5yLL1'
+        demoUrl: 'https://app.spotfinder.vn/vi/chatbot/ims-doanhbMd0Z8TVCnzFNo5yLL1'
       };
 
       const $ = (id) => document.getElementById(id);
@@ -495,10 +540,16 @@
       const ctaFallback = $('ctaFallback');
       const openWindow = $('openWindow');
       const timeZoneNote = $('timeZoneNote');
+      const countdownText = $('countdownText');
+      const quickCtaTitle = $('quickCtaTitle');
+      const quickCtaText = $('quickCtaText');
+      const quickDemoButton = $('quickDemoButton');
+      const quickCtaFallback = $('quickCtaFallback');
 
       openWindow.textContent = `${pad(CONFIG.openHour)}:${pad(CONFIG.openMinute)} - ${pad(CONFIG.closeHour)}:${pad(CONFIG.closeMinute)}`;
       timeZoneNote.textContent = 'Áp dụng theo giờ Việt Nam (GMT+7).';
       demoButton.href = CONFIG.demoUrl;
+      quickDemoButton.href = CONFIG.demoUrl;
 
       function pad(n) {
         return String(n).padStart(2, '0');
@@ -531,12 +582,50 @@
         };
       }
 
-      function isDemoOpen() {
+      function getCurrentMinutes() {
         const now = getVNNowParts();
-        const currentMinutes = now.hour * 60 + now.minute;
+        return now.hour * 60 + now.minute;
+      }
+
+      function isDemoOpen() {
+        const currentMinutes = getCurrentMinutes();
         const startMinutes = CONFIG.openHour * 60 + CONFIG.openMinute;
         const endMinutes = CONFIG.closeHour * 60 + CONFIG.closeMinute;
         return currentMinutes >= startMinutes && currentMinutes < endMinutes;
+      }
+
+      function getMinutesUntil(targetMinutes) {
+        const currentMinutes = getCurrentMinutes();
+        return targetMinutes - currentMinutes;
+      }
+
+      function formatMinutes(totalMinutes) {
+        const minutes = Math.max(0, totalMinutes);
+        const hours = Math.floor(minutes / 60);
+        const remain = minutes % 60;
+        if (hours > 0 && remain > 0) return `${hours} giờ ${remain} phút`;
+        if (hours > 0) return `${hours} giờ`;
+        return `${remain} phút`;
+      }
+
+      function updateCountdown(open) {
+        const startMinutes = CONFIG.openHour * 60 + CONFIG.openMinute;
+        const endMinutes = CONFIG.closeHour * 60 + CONFIG.closeMinute;
+
+        if (open) {
+          const left = getMinutesUntil(endMinutes);
+          countdownText.textContent = `Demo đang mở. Còn khoảng ${formatMinutes(left)} trước khi tạm đóng.`;
+          return;
+        }
+
+        const now = getCurrentMinutes();
+        if (now < startMinutes) {
+          const untilOpen = getMinutesUntil(startMinutes);
+          countdownText.textContent = `Demo sẽ mở sau khoảng ${formatMinutes(untilOpen)}.`;
+        } else {
+          const untilTomorrowOpen = (24 * 60 - now) + startMinutes;
+          countdownText.textContent = `Demo hôm nay đã kết thúc. Sẽ mở lại sau khoảng ${formatMinutes(untilTomorrowOpen)}.`;
+        }
       }
 
       function isMobileDevice() {
@@ -557,15 +646,40 @@
         accessStatus.innerHTML = `<h3>${title}</h3><p>${message}</p>`;
       }
 
-      function showDemoButton(show) {
-        demoButton.classList.toggle('hidden', !show);
-        ctaFallback.classList.toggle('hidden', show);
+      function toggleButton(button, show) {
+        button.classList.toggle('hidden', !show);
       }
+
+      function setQuickCta(title, text, fallback, showButton) {
+        quickCtaTitle.textContent = title;
+        quickCtaText.textContent = text;
+        quickCtaFallback.textContent = fallback;
+        toggleButton(quickDemoButton, showButton);
+        quickCtaFallback.classList.toggle('hidden', showButton);
+      }
+
+      function setBottomCta(title, text, fallback, showButton) {
+        ctaTitle.textContent = title;
+        ctaText.textContent = text;
+        ctaFallback.textContent = fallback;
+        toggleButton(demoButton, showButton);
+        ctaFallback.classList.toggle('hidden', showButton);
+      }
+
+      function maybeFocusCta(showButton) {
+        if (!showButton) return;
+        if (window.matchMedia('(max-width: 960px)').matches) {
+          quickDemoButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+
+      let lastMode = '';
 
       function refreshState() {
         const mobile = isMobileDevice();
         const portrait = isPortraitMode();
         const open = isDemoOpen();
+        updateCountdown(open);
 
         deviceType.textContent = mobile ? 'Điện thoại' : 'Máy tính / màn hình lớn';
         orientationType.textContent = mobile ? (portrait ? 'Dọc' : 'Ngang') : 'Không áp dụng';
@@ -578,10 +692,19 @@
             'Demo hiện chỉ hỗ trợ trên điện thoại',
             'Vui lòng mở lại trang này bằng điện thoại để có trải nghiệm phù hợp nhất. Liên kết demo sẽ chỉ hiển thị khi thiết bị hợp lệ.'
           );
-          ctaTitle.textContent = 'Vui lòng dùng điện thoại để tiếp tục';
-          ctaText.textContent = 'Trang demo được tối ưu riêng cho điện thoại. Khi truy cập bằng máy tính, liên kết demo sẽ được ẩn để tránh trải nghiệm không phù hợp.';
-          ctaFallback.textContent = 'Liên kết demo đang được ẩn vì thiết bị hiện tại là máy tính hoặc màn hình lớn.';
-          showDemoButton(false);
+          setQuickCta(
+            'Vui lòng dùng điện thoại để tiếp tục',
+            'Bản demo hiện được tối ưu riêng cho điện thoại. Khi mở bằng máy tính, hệ thống sẽ ẩn liên kết để tránh trải nghiệm không phù hợp.',
+            'Liên kết demo đang được ẩn vì thiết bị hiện tại là máy tính hoặc màn hình lớn.',
+            false
+          );
+          setBottomCta(
+            'Vui lòng dùng điện thoại để tiếp tục',
+            'Trang demo được tối ưu riêng cho điện thoại. Khi truy cập bằng máy tính, liên kết demo sẽ được ẩn để tránh trải nghiệm không phù hợp.',
+            'Liên kết demo đang được ẩn vì thiết bị hiện tại là máy tính hoặc màn hình lớn.',
+            false
+          );
+          lastMode = 'desktop';
           return;
         }
 
@@ -592,10 +715,19 @@
             'Demo hiện chỉ hỗ trợ điện thoại ở chế độ dọc',
             'Vui lòng xoay màn hình sang dọc để tiếp tục. Sau khi đúng chế độ hiển thị, hệ thống sẽ tự động cập nhật trạng thái truy cập.'
           );
-          ctaTitle.textContent = 'Vui lòng xoay điện thoại sang dọc';
-          ctaText.textContent = 'Trải nghiệm demo được thiết kế cho bố cục dọc trên điện thoại để nội dung hiển thị rõ ràng và ổn định hơn.';
-          ctaFallback.textContent = 'Liên kết demo đang được ẩn cho đến khi thiết bị chuyển sang chế độ dọc.';
-          showDemoButton(false);
+          setQuickCta(
+            'Vui lòng xoay điện thoại sang dọc',
+            'Trải nghiệm demo được thiết kế cho bố cục dọc trên điện thoại để nội dung hiển thị rõ ràng và ổn định hơn.',
+            'Liên kết demo đang được ẩn cho đến khi thiết bị chuyển sang chế độ dọc.',
+            false
+          );
+          setBottomCta(
+            'Vui lòng xoay điện thoại sang dọc',
+            'Trải nghiệm demo được thiết kế cho bố cục dọc trên điện thoại để nội dung hiển thị rõ ràng và ổn định hơn.',
+            'Liên kết demo đang được ẩn cho đến khi thiết bị chuyển sang chế độ dọc.',
+            false
+          );
+          lastMode = 'landscape';
           return;
         }
 
@@ -606,10 +738,19 @@
             'Demo hiện đang tạm đóng',
             `Demo chỉ mở trong khung giờ ${pad(CONFIG.openHour)}:${pad(CONFIG.openMinute)} - ${pad(CONFIG.closeHour)}:${pad(CONFIG.closeMinute)} hằng ngày theo giờ Việt Nam. Vui lòng quay lại trong thời gian trên để trải nghiệm.`
           );
-          ctaTitle.textContent = 'Demo hiện đang tạm đóng';
-          ctaText.textContent = 'Liên kết demo chỉ hiển thị trong khung giờ mở để đảm bảo chất lượng trải nghiệm và theo dõi hệ thống ổn định hơn.';
-          ctaFallback.textContent = 'Liên kết demo đang được ẩn vì hiện không nằm trong thời gian mở.';
-          showDemoButton(false);
+          setQuickCta(
+            'Demo hiện đang tạm đóng',
+            'Liên kết chỉ hiển thị trong khung giờ mở để đảm bảo hệ thống ổn định và trải nghiệm tốt hơn cho người dùng.',
+            'Liên kết demo đang được ẩn vì hiện không nằm trong thời gian mở.',
+            false
+          );
+          setBottomCta(
+            'Demo hiện đang tạm đóng',
+            'Liên kết demo chỉ hiển thị trong khung giờ mở để đảm bảo chất lượng trải nghiệm và theo dõi hệ thống ổn định hơn.',
+            'Liên kết demo đang được ẩn vì hiện không nằm trong thời gian mở.',
+            false
+          );
+          lastMode = 'closed';
           return;
         }
 
@@ -619,16 +760,37 @@
           'Demo đang mở và sẵn sàng trải nghiệm',
           'Thiết bị hiện tại phù hợp để sử dụng demo. Bạn có thể bấm vào nút bên dưới để truy cập ngay.'
         );
-        ctaTitle.textContent = 'Trải nghiệm Spotty Demo';
-        ctaText.textContent = 'Thiết bị của bạn đang phù hợp và demo hiện đang mở. Bạn có thể truy cập ngay để trải nghiệm chatbot nhà hàng của Spotty.';
-        ctaFallback.textContent = '';
-        showDemoButton(true);
+        setQuickCta(
+          'Vào demo ngay',
+          'Demo hiện đang mở. Bạn có thể bắt đầu trải nghiệm Spotty ngay bây giờ.',
+          '',
+          true
+        );
+        setBottomCta(
+          'Trải nghiệm Spotty Demo',
+          'Thiết bị của bạn đang phù hợp và demo hiện đang mở. Bạn có thể truy cập ngay để trải nghiệm chatbot nhà hàng của Spotty.',
+          '',
+          true
+        );
+
+        if (lastMode !== 'open') {
+          maybeFocusCta(true);
+        }
+        lastMode = 'open';
       }
 
       refreshState();
       window.addEventListener('resize', refreshState);
       window.addEventListener('orientationchange', refreshState);
       setInterval(refreshState, 30000);
+      setInterval(() => {
+        const wasOpen = isDemoOpen();
+        refreshState();
+        const nowOpen = isDemoOpen();
+        if (!wasOpen && nowOpen) {
+          maybeFocusCta(true);
+        }
+      }, 60000);
     })();
   </script>
 </body>
