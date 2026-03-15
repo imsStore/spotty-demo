@@ -1,290 +1,635 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Spotty Demo</title>
-  <meta name="description" content="Trải nghiệm Spotty AI - nhân viên ảo cho nhà hàng mẫu.">
+  <meta name="description" content="Landing page thông báo demo Spotty" />
   <style>
-    :root{
-      --bg:#fff8f1;
-      --card:#ffffff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --brand:#111827;
-      --accent:#f59e0b;
-      --line:#f1e4d2;
-      --shadow:0 10px 30px rgba(17,24,39,.08);
-      --radius:20px;
+    :root {
+      --bg-1: #f6f8fc;
+      --bg-2: #eef3ff;
+      --card: rgba(255, 255, 255, 0.92);
+      --text: #162033;
+      --muted: #63708a;
+      --line: rgba(22, 32, 51, 0.08);
+      --shadow: 0 18px 50px rgba(31, 44, 77, 0.12);
+      --primary: #2d6df6;
+      --primary-2: #6c8fff;
+      --success-bg: #edf8f0;
+      --success-text: #18794e;
+      --warn-bg: #fff6ea;
+      --warn-text: #9a5b00;
+      --danger-bg: #fff1f1;
+      --danger-text: #b42318;
+      --info-bg: #eef4ff;
+      --info-text: #2456c4;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --container: 1120px;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      color:var(--text);
+      color: var(--text);
       background:
-        radial-gradient(circle at top left, #ffe8c7 0, transparent 28%),
-        radial-gradient(circle at bottom right, #fff1dc 0, transparent 25%),
-        var(--bg);
-      min-height:100vh;
+        radial-gradient(circle at top left, rgba(108, 143, 255, 0.18), transparent 32%),
+        radial-gradient(circle at top right, rgba(45, 109, 246, 0.10), transparent 25%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 46%, #fbfcff 100%);
     }
-    .wrap{
-      max-width:900px;
-      margin:0 auto;
-      padding:24px;
+
+    .shell {
+      width: min(calc(100% - 32px), var(--container));
+      margin: 0 auto;
+      padding: 24px 0 40px;
     }
-    .hero{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:24px;
-      align-items:center;
-      min-height:100vh;
-      padding:24px 0;
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      align-items: stretch;
     }
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
-    .main{
-      padding:34px;
+
+    .hero-main {
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
     }
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:#fffdf9;
-      color:#7c5a16;
-      font-size:14px;
-      font-weight:600;
+
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -70px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(45,109,246,0.16) 0%, rgba(45,109,246,0) 70%);
+      pointer-events: none;
     }
-    h1{
-      margin:18px 0 14px;
-      font-size:clamp(32px, 5vw, 56px);
-      line-height:1.04;
-      letter-spacing:-0.02em;
+
+    .hero-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(45, 109, 246, 0.08);
+      color: var(--info-text);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
     }
-    .sub{
-      font-size:18px;
-      line-height:1.7;
-      color:var(--muted);
-      margin:0 0 24px;
-      max-width:640px;
+
+    .mascot {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      object-fit: cover;
+      background: #fff;
+      border: 1px solid rgba(45,109,246,0.12);
     }
-    .cta-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin:0 0 20px;
+
+    h1 {
+      margin: 20px 0 12px;
+      font-size: clamp(30px, 5vw, 52px);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
     }
-    .btn{
-      appearance:none;
-      border:none;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:52px;
-      padding:0 20px;
-      border-radius:14px;
-      font-weight:700;
-      font-size:16px;
-      transition:transform .12s ease, opacity .12s ease, box-shadow .12s ease;
-      cursor:pointer;
+
+    .lead {
+      margin: 0;
+      font-size: clamp(16px, 2.2vw, 19px);
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 720px;
     }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{
-      background:var(--brand);
-      color:#fff;
-      box-shadow:0 10px 24px rgba(17,24,39,.18);
+
+    .chips {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-    .btn-secondary{
-      background:#fff;
-      color:var(--brand);
-      border:1px solid var(--line);
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
     }
-    .note{
-      color:var(--muted);
-      font-size:14px;
+
+    .hero-side {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
     }
-    .mini{
-      padding:22px;
-      display:flex;
-      flex-direction:column;
-      gap:16px;
+
+    .side-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
     }
-    .mini h3{
-      margin:0;
-      font-size:18px;
+
+    .status-box {
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      border: 1px solid transparent;
     }
-    .suggestions{
-      display:grid;
-      gap:12px;
-      margin:0;
-      padding:0;
-      list-style:none;
+
+    .status-box h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
     }
-    .q{
-      width:100%;
-      text-align:left;
-      background:#fffaf3;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px 14px 14px 16px;
-      font-size:15px;
-      line-height:1.5;
-      color:var(--text);
-      cursor:pointer;
-      transition:transform .12s ease, background .12s ease;
+
+    .status-box p {
+      margin: 0;
+      line-height: 1.65;
+      font-size: 15px;
     }
-    .q:hover{
-      transform:translateY(-1px);
-      background:#fff6ea;
+
+    .status-open { background: var(--success-bg); color: var(--success-text); border-color: rgba(24,121,78,0.1); }
+    .status-warn { background: var(--warn-bg); color: var(--warn-text); border-color: rgba(154,91,0,0.1); }
+    .status-blocked { background: var(--danger-bg); color: var(--danger-text); border-color: rgba(180,35,24,0.1); }
+    .status-info { background: var(--info-bg); color: var(--info-text); border-color: rgba(36,86,196,0.08); }
+
+    .open-hours {
+      padding: 16px 18px;
+      border-radius: var(--radius-lg);
+      background: #fff;
+      border: 1px solid var(--line);
     }
-    .tip{
-      font-size:14px;
-      color:var(--muted);
-      line-height:1.6;
-      margin:0;
+
+    .open-hours .time {
+      display: block;
+      margin-top: 6px;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
     }
-    .footer{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-      margin-top:18px;
-      color:var(--muted);
-      font-size:13px;
+
+    .grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
     }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:#fffaf3;
-      border:1px solid var(--line);
-      font-size:14px;
-      color:#805c12;
-      font-weight:600;
+
+    .section {
+      padding: 26px;
     }
-    .stack{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
+
+    .section h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      letter-spacing: -0.02em;
     }
-    .toast{
-      position:fixed;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%) translateY(16px);
-      background:#111827;
-      color:#fff;
-      padding:12px 16px;
-      border-radius:14px;
-      font-size:14px;
-      box-shadow:0 10px 24px rgba(17,24,39,.22);
-      opacity:0;
-      pointer-events:none;
-      transition:all .18s ease;
-      z-index:99;
+
+    .section p,
+    .section li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
     }
-    .toast.show{
-      opacity:1;
-      transform:translateX(-50%) translateY(0);
+
+    .section ul {
+      margin: 0;
+      padding-left: 20px;
     }
-    @media (max-width: 820px){
-      .hero{
-        grid-template-columns:1fr;
-        min-height:auto;
-        padding:10px 0 28px;
+
+    .status-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+    }
+
+    .status-row .label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status-row .value {
+      font-size: 15px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .cta-card {
+      margin-top: 22px;
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background: linear-gradient(135deg, rgba(45,109,246,0.08), rgba(108,143,255,0.12));
+    }
+
+    .cta-copy h2 {
+      margin: 0 0 8px;
+      font-size: clamp(22px, 4vw, 30px);
+      letter-spacing: -0.02em;
+    }
+
+    .cta-copy p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+      max-width: 620px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 210px;
+      padding: 16px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.01em;
+      box-shadow: 0 16px 34px rgba(45, 109, 246, 0.22);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 36px rgba(45, 109, 246, 0.28);
+    }
+
+    .cta-btn[hidden], .hidden { display: none !important; }
+
+    .cta-note {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-top: 18px;
+      padding-bottom: 6px;
+    }
+
+    @media (max-width: 960px) {
+      .hero,
+      .grid,
+      .cta-card {
+        grid-template-columns: 1fr;
+        display: grid;
       }
-      .main{padding:24px}
-      .wrap{padding:16px}
-      .sub{font-size:16px}
-      .cta-row{flex-direction:column}
-      .btn{width:100%}
+
+      .cta-card {
+        justify-content: initial;
+      }
+
+      .cta-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(calc(100% - 20px), var(--container));
+        padding: 12px 0 28px;
+      }
+
+      .hero-main,
+      .hero-side,
+      .section,
+      .cta-card {
+        padding: 20px;
+      }
+
+      .hero-top {
+        font-size: 13px;
+        gap: 10px;
+      }
+
+      .mascot {
+        width: 36px;
+        height: 36px;
+      }
+
+      .lead,
+      .section p,
+      .section li,
+      .status-box p,
+      .cta-copy p {
+        font-size: 14px;
+      }
+
+      .open-hours .time {
+        font-size: 24px;
+      }
+
+      .status-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .status-row .value {
+        text-align: left;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <main class="shell">
     <section class="hero">
-      <div class="card main">
-        <div class="eyebrow">🍕 Spotty AI Demo</div>
-        <h1>Nhân viên ảo cho nhà hàng,<br>trải nghiệm ngay trên nhà hàng mẫu</h1>
-        <p class="sub">
-          Bạn có thể thử hỏi món ăn, xin gợi ý combo, hoặc mô phỏng đặt món như khách thật.
-          Landing này chỉ là điểm bắt đầu — khi bấm vào nút bên dưới, bạn sẽ được đưa tới chatbot demo.
+      <div class="card hero-main">
+        <div class="hero-top">
+          <img
+            class="mascot"
+            src="https://ims-spotfinder-media.s3.ap-southeast-1.amazonaws.com/public/test/spotty_mascot6.png"
+            alt="Spotty mascot"
+          />
+          <span>SPOTTY DEMO</span>
+        </div>
+
+        <h1>Chào mừng đến với Spotty Demo</h1>
+        <p class="lead">
+          Trải nghiệm sớm phiên bản demo chatbot nhà hàng của Spotty. Đây là bản thử nghiệm đang trong quá trình phát triển,
+          được tối ưu để sử dụng trên điện thoại.
         </p>
 
-        <div class="cta-row">
-          <a class="btn btn-primary" id="startDemoBtn" href="https://chat.spotty.vn" target="_blank" rel="noopener noreferrer">
-            Bắt đầu demo
-          </a>
-          <a class="btn btn-secondary" href="#goi-y">
-            Xem câu hỏi gợi ý
-          </a>
-        </div>
-
-        <div class="stack">
-          <div class="badge">⚡ Demo nhanh, không cần cài app</div>
-          <div class="badge">💬 Thử hỏi như khách thật</div>
-          <div class="badge">🧾 Có thể mô phỏng gọi món</div>
-        </div>
-
-        <div class="footer">
-          <span>Phù hợp để gắn vào TikTok, YouTube, Facebook hoặc QR.</span>
-          <span>URL gợi ý: demo.spotty.vn</span>
+        <div class="chips">
+          <span class="chip">Bản thử nghiệm</span>
+          <span class="chip">Tối ưu cho điện thoại</span>
+          <span class="chip">Mở theo khung giờ</span>
         </div>
       </div>
 
-      <aside class="card mini" id="goi-y">
-        <h3>Gợi ý câu hỏi để thử ngay</h3>
-        <ul class="suggestions">
-          <li><button class="q" data-copy="Pizza hải sản có gì?">Pizza hải sản có gì?</button></li>
-          <li><button class="q" data-copy="Gợi ý combo cho 2 người giúp tôi.">Gợi ý combo cho 2 người giúp tôi.</button></li>
-          <li><button class="q" data-copy="Có món nào cay hoặc đậm vị không?">Có món nào cay hoặc đậm vị không?</button></li>
-          <li><button class="q" data-copy="Nếu tôi muốn vừa pizza vừa nước ngọt thì nên chọn gì?">Nếu tôi muốn vừa pizza vừa nước ngọt thì nên chọn gì?</button></li>
-          <li><button class="q" data-copy="Cho tôi xem thêm vài món bán chạy.">Cho tôi xem thêm vài món bán chạy.</button></li>
-        </ul>
-        <p class="tip">
-          Chạm vào một câu để copy, sau đó dán vào chatbot. Cách này giúp người dùng bắt đầu nhanh hơn và tăng tỉ lệ thử demo.
-        </p>
+      <aside class="card hero-side">
+        <div>
+          <div class="side-label">Trạng thái truy cập</div>
+          <div id="accessStatus" class="status-box status-info">
+            <h3>Đang kiểm tra điều kiện truy cập...</h3>
+            <p>Vui lòng đợi trong giây lát để hệ thống xác định thiết bị, hướng màn hình và thời gian mở demo.</p>
+          </div>
+        </div>
+
+        <div class="open-hours">
+          <div class="side-label">Thời gian mở demo</div>
+          <span class="time" id="openWindow">07:00 - 21:00</span>
+          <div class="cta-note" id="timeZoneNote">Áp dụng theo giờ Việt Nam (GMT+7).</div>
+        </div>
       </aside>
     </section>
-  </div>
 
-  <div class="toast" id="toast">Đã copy câu hỏi gợi ý</div>
+    <section class="grid">
+      <div class="card section">
+        <h2>Lưu ý khi trải nghiệm</h2>
+        <ul>
+          <li>Dữ liệu hiện tại còn giới hạn, nên một số câu trả lời có thể chưa đầy đủ như phiên bản chính thức.</li>
+          <li>Đây vẫn là bản đang phát triển, nên nội dung và tính năng sẽ tiếp tục được cải thiện.</li>
+          <li>Demo hiện được tối ưu cho điện thoại để mang lại trải nghiệm ổn định và trực quan hơn.</li>
+        </ul>
+      </div>
+
+      <div class="card section">
+        <h2>Trạng thái thiết bị</h2>
+        <div class="status-list">
+          <div class="status-row">
+            <div class="label">Thiết bị hiện tại</div>
+            <div class="value" id="deviceType">Đang xác định...</div>
+          </div>
+          <div class="status-row">
+            <div class="label">Chế độ hiển thị</div>
+            <div class="value" id="orientationType">Đang xác định...</div>
+          </div>
+          <div class="status-row">
+            <div class="label">Trạng thái demo</div>
+            <div class="value" id="openStatus">Đang kiểm tra...</div>
+          </div>
+          <div class="status-row">
+            <div class="label">Khả năng truy cập</div>
+            <div class="value" id="accessResult">Đang kiểm tra...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card cta-card">
+      <div class="cta-copy">
+        <h2 id="ctaTitle">Trải nghiệm Spotty Demo</h2>
+        <p id="ctaText">
+          Khi thiết bị phù hợp và đang trong thời gian mở demo, nút truy cập sẽ hiển thị tại đây.
+        </p>
+      </div>
+
+      <div>
+        <a id="demoButton" class="cta-btn hidden" href="https://imsstore.github.io/spotty-demo/" target="_blank" rel="noopener noreferrer">
+          Trải nghiệm demo
+        </a>
+        <div id="ctaFallback" class="cta-note">
+          Hệ thống đang kiểm tra điều kiện truy cập trước khi hiển thị liên kết demo.
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Cảm ơn bạn đã trải nghiệm sớm và góp phần giúp Spotty hoàn thiện hơn.
+    </div>
+  </main>
 
   <script>
-    const toast = document.getElementById('toast');
+    (function () {
+      const CONFIG = {
+        openHour: 7,
+        openMinute: 0,
+        closeHour: 21,
+        closeMinute: 0,
+        timeZone: 'Asia/Ho_Chi_Minh',
+        demoUrl: 'https://imsstore.github.io/spotty-demo/'
+      };
 
-    function showToast(message){
-      toast.textContent = message;
-      toast.classList.add('show');
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => {
-        toast.classList.remove('show');
-      }, 1600);
-    }
+      const $ = (id) => document.getElementById(id);
+      const accessStatus = $('accessStatus');
+      const deviceType = $('deviceType');
+      const orientationType = $('orientationType');
+      const openStatus = $('openStatus');
+      const accessResult = $('accessResult');
+      const ctaTitle = $('ctaTitle');
+      const ctaText = $('ctaText');
+      const demoButton = $('demoButton');
+      const ctaFallback = $('ctaFallback');
+      const openWindow = $('openWindow');
+      const timeZoneNote = $('timeZoneNote');
 
-    document.querySelectorAll('[data-copy]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const text = btn.getAttribute('data-copy');
-        try {
-          await navigator.clipboard.writeText(text);
-          showToast('Đã copy: ' + text);
-        } catch (e) {
-          showToast('Không copy tự động được. Bạn hãy bôi đen và copy thủ công.');
+      openWindow.textContent = `${pad(CONFIG.openHour)}:${pad(CONFIG.openMinute)} - ${pad(CONFIG.closeHour)}:${pad(CONFIG.closeMinute)}`;
+      timeZoneNote.textContent = 'Áp dụng theo giờ Việt Nam (GMT+7).';
+      demoButton.href = CONFIG.demoUrl;
+
+      function pad(n) {
+        return String(n).padStart(2, '0');
+      }
+
+      function getVNNowParts() {
+        const formatter = new Intl.DateTimeFormat('en-GB', {
+          timeZone: CONFIG.timeZone,
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        });
+
+        const parts = formatter.formatToParts(new Date());
+        const map = {};
+        for (const part of parts) {
+          if (part.type !== 'literal') map[part.type] = part.value;
         }
-      });
-    });
+        return {
+          year: Number(map.year),
+          month: Number(map.month),
+          day: Number(map.day),
+          hour: Number(map.hour),
+          minute: Number(map.minute),
+          second: Number(map.second)
+        };
+      }
+
+      function isDemoOpen() {
+        const now = getVNNowParts();
+        const currentMinutes = now.hour * 60 + now.minute;
+        const startMinutes = CONFIG.openHour * 60 + CONFIG.openMinute;
+        const endMinutes = CONFIG.closeHour * 60 + CONFIG.closeMinute;
+        return currentMinutes >= startMinutes && currentMinutes < endMinutes;
+      }
+
+      function isMobileDevice() {
+        const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+        const mobileUA = /android|iphone|ipod|blackberry|iemobile|opera mini|mobile/i.test(ua);
+        const narrowScreen = window.matchMedia('(max-width: 900px)').matches;
+        const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+        return mobileUA || (narrowScreen && coarsePointer);
+      }
+
+      function isPortraitMode() {
+        return window.matchMedia('(orientation: portrait)').matches;
+      }
+
+      function setStatusBox(kind, title, message) {
+        accessStatus.className = 'status-box';
+        accessStatus.classList.add(kind);
+        accessStatus.innerHTML = `<h3>${title}</h3><p>${message}</p>`;
+      }
+
+      function showDemoButton(show) {
+        demoButton.classList.toggle('hidden', !show);
+        ctaFallback.classList.toggle('hidden', show);
+      }
+
+      function refreshState() {
+        const mobile = isMobileDevice();
+        const portrait = isPortraitMode();
+        const open = isDemoOpen();
+
+        deviceType.textContent = mobile ? 'Điện thoại' : 'Máy tính / màn hình lớn';
+        orientationType.textContent = mobile ? (portrait ? 'Dọc' : 'Ngang') : 'Không áp dụng';
+        openStatus.textContent = open ? 'Đang mở' : 'Tạm đóng';
+
+        if (!mobile) {
+          accessResult.textContent = 'Không hỗ trợ trên thiết bị hiện tại';
+          setStatusBox(
+            'status-blocked',
+            'Demo hiện chỉ hỗ trợ trên điện thoại',
+            'Vui lòng mở lại trang này bằng điện thoại để có trải nghiệm phù hợp nhất. Liên kết demo sẽ chỉ hiển thị khi thiết bị hợp lệ.'
+          );
+          ctaTitle.textContent = 'Vui lòng dùng điện thoại để tiếp tục';
+          ctaText.textContent = 'Trang demo được tối ưu riêng cho điện thoại. Khi truy cập bằng máy tính, liên kết demo sẽ được ẩn để tránh trải nghiệm không phù hợp.';
+          ctaFallback.textContent = 'Liên kết demo đang được ẩn vì thiết bị hiện tại là máy tính hoặc màn hình lớn.';
+          showDemoButton(false);
+          return;
+        }
+
+        if (!portrait) {
+          accessResult.textContent = 'Cần xoay màn hình sang dọc';
+          setStatusBox(
+            'status-warn',
+            'Demo hiện chỉ hỗ trợ điện thoại ở chế độ dọc',
+            'Vui lòng xoay màn hình sang dọc để tiếp tục. Sau khi đúng chế độ hiển thị, hệ thống sẽ tự động cập nhật trạng thái truy cập.'
+          );
+          ctaTitle.textContent = 'Vui lòng xoay điện thoại sang dọc';
+          ctaText.textContent = 'Trải nghiệm demo được thiết kế cho bố cục dọc trên điện thoại để nội dung hiển thị rõ ràng và ổn định hơn.';
+          ctaFallback.textContent = 'Liên kết demo đang được ẩn cho đến khi thiết bị chuyển sang chế độ dọc.';
+          showDemoButton(false);
+          return;
+        }
+
+        if (!open) {
+          accessResult.textContent = 'Ngoài khung giờ mở demo';
+          setStatusBox(
+            'status-warn',
+            'Demo hiện đang tạm đóng',
+            `Demo chỉ mở trong khung giờ ${pad(CONFIG.openHour)}:${pad(CONFIG.openMinute)} - ${pad(CONFIG.closeHour)}:${pad(CONFIG.closeMinute)} hằng ngày theo giờ Việt Nam. Vui lòng quay lại trong thời gian trên để trải nghiệm.`
+          );
+          ctaTitle.textContent = 'Demo hiện đang tạm đóng';
+          ctaText.textContent = 'Liên kết demo chỉ hiển thị trong khung giờ mở để đảm bảo chất lượng trải nghiệm và theo dõi hệ thống ổn định hơn.';
+          ctaFallback.textContent = 'Liên kết demo đang được ẩn vì hiện không nằm trong thời gian mở.';
+          showDemoButton(false);
+          return;
+        }
+
+        accessResult.textContent = 'Có thể truy cập ngay';
+        setStatusBox(
+          'status-open',
+          'Demo đang mở và sẵn sàng trải nghiệm',
+          'Thiết bị hiện tại phù hợp để sử dụng demo. Bạn có thể bấm vào nút bên dưới để truy cập ngay.'
+        );
+        ctaTitle.textContent = 'Trải nghiệm Spotty Demo';
+        ctaText.textContent = 'Thiết bị của bạn đang phù hợp và demo hiện đang mở. Bạn có thể truy cập ngay để trải nghiệm chatbot nhà hàng của Spotty.';
+        ctaFallback.textContent = '';
+        showDemoButton(true);
+      }
+
+      refreshState();
+      window.addEventListener('resize', refreshState);
+      window.addEventListener('orientationchange', refreshState);
+      setInterval(refreshState, 30000);
+    })();
   </script>
 </body>
 </html>
